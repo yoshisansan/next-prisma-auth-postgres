@@ -1,28 +1,63 @@
-# Next.js + Tailwind CSS Example
+# Docker で立てた DB を Postgres で扱い NextAuth で認証を実装するチュートリアル
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.2)](https://tailwindcss.com/blog/tailwindcss-v3-2) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
+参照：https://zenn.dev/farstep/books/7a6eb67dd3bf1f
 
-## Deploy your own
+## How to start
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
-
-## How to use
-
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init), [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/), or [pnpm](https://pnpm.io) to bootstrap the example:
-
-```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
+```
+yarn install
 ```
 
-```bash
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
+### Docker 準備
+
+```
+docker-compose up
 ```
 
-```bash
-pnpm create next-app --example with-tailwindcss with-tailwindcss-app
+別プロンプトのタブで
+
+```
+docker ps
 ```
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
-# next-prisma-auth-postgres
+でコンテナ確認
+
+```
+docker container exec -it postgres bash
+```
+
+にてコンテナの中へ入る。prisma 側でマイグレーションファイルに更新がある場合は立ち上げ直す。
+
+```
+psql -l
+```
+
+にて DB 一覧に mydb の確認
+
+### Prisma の準備
+
+```
+yarn prisma init
+```
+
+#### .env の設定
+
+```
+DATABASE_URL="postgresql://root:secret@localhost:5432/mydb"
+```
+
+prisma で自動生成された Env の DATABASE_URL の値を docker-compose.yml で記述した内容へ書き換える
+
+#### PrismaStudio でテーブル一覧の確認
+
+```
+yarn prisma studio
+```
+
+<http://localhost:5555>を確認
+
+## migration ファイルを作成する場合
+
+```
+yarn prisma migrate dev --name init
+```
