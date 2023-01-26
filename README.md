@@ -48,6 +48,23 @@ DATABASE_URL="postgresql://root:secret@localhost:5432/mydb"
 
 prisma で自動生成された Env の DATABASE_URL の値を docker-compose.yml で記述した内容へ書き換える
 
+```
+ GITHUB_ID=取得したClient ID
+ GITHUB_SECRET=取得したClient secret
+ NEXTAUTH_URL=http://localhost:3000
+ SECRET=ランダムな文字列
+```
+
+Github の Developper settings のページで OAuth App を作成した際の id とシークレットキーを設定。
+
+SECRET=は
+
+```
+openssl rand -base64 32
+```
+
+などでランダム生成したものを設定
+
 #### PrismaStudio でテーブル一覧の確認
 
 ```
